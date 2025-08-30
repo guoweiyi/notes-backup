@@ -1,8 +1,10 @@
 # 学习日志·一个优秀的 Git 工作流
 
-* 参考 https://www.bilibili.com/video/BV19e4y1q7JJ
+三个仓库 Remote  Local Disk 将本地仓库想象成两个部分
 
-三个仓库 Remote  Local Disk 将本地想象成两个部分
+## 流程
+
+### 正常步骤
 
 `git clone` 三仓库统一
 
@@ -12,13 +14,15 @@
 
 `git diff` 查看暂存区与disk区文件的差异
 
-`git add <changed_file>`  
+`git add <chanssged_file>`  
 
 `git commit` 将暂存区内容添加到local区的当前分支中
 
 `git push origin my-feature` 提交
 
-`git checkout main init` 不是修改状态
+### 另外情况
+
+`git checkout main` 不是修改状态
 
 `git fetch origin` 拉取远端最新分支
 
@@ -34,7 +38,7 @@
 
 `git pull origin master`
 
-另：实际项目情况
+## 实际项目情况
 
 main：生产环境，也就是你们在网上可以下载到的版本，是经过了很多轮测试得到的稳定版本。 
 
@@ -43,8 +47,6 @@ release：开发内部发版，也就是测试环境。
 dev：所有的feature都要从dev上checkout。 
 
 feature：每个需求新创建的分支。 
-
-
 
 1.从dev分支上checkout -b new-feature，进行开发 
 
@@ -56,3 +58,4 @@ feature：每个需求新创建的分支。
 
 5.这时可以将release分支合并到dev上，也可以删除掉feature分支了，并等待通知是否将此功能上线（在正式服务器上运行），如果上线，那就merge到main（master）分支。
 
+* 参考 https://www.bilibili.com/video/BV19e4y1q7JJ
