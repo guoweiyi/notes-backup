@@ -1,25 +1,8 @@
-**C++ 标准模板库 (STL, Standard Template Library)**：包含一些常用数据结构与算法的模板的 C++ 软件库。其包含四个组件——算法 (Algorithms)、容器 (Containers)、仿函数 (Functors)、迭代器 (Iterators).
-
-示例：
-
-- 算法：`sort(a.begin(), a.end())`
-- 容器：`priority_queue<int> pque`
-- 仿函数：`greater<int>()`
-- 迭代器：`vector<int>::iterator it = a.begin()`
-
-# 1 前言
-
-STL 作为一个封装良好，性能合格的 C++ 标准库，在算法竞赛中运用极其常见。灵活且正确使用 STL 可以节省非常多解题时间，这一点不仅是由于可以直接调用，还是因为它封装良好，可以让代码的可读性变高，解题思路更清晰，调试过程 ~~往往~~ 更顺利。
-
-不过 STL 毕竟使用了很多复杂的结构来实现丰富的功能，它的效率往往是比不上自己手搓针对特定题目的数据结构与算法的。因此，STL 的使用相当于使用更长的运行时间换取更高的编程效率。因此，在实际比赛中要权衡 STL 的利弊，不过这一点就得靠经验了。
-
-接下来，我会分享在算法竞赛中常用的 STL 容器和算法，对于函数和迭代器，就不着重展开讲了。
+**C++ 标准模板库 (STL, Standard Template Library)**：包含一些常用数据结构与算法的模板的 C++ 软件库。
 
 # 2 常用容器
 
 ## 2.1 内容总览
-
-打勾的是本次将会详细讲解的，加粗的是算法竞赛中有必要学习的。
 
 - 顺序容器
   - [ ] **array**
@@ -51,7 +34,7 @@ STL 作为一个封装良好，性能合格的 C++ 标准库，在算法竞赛�
   - [x] **pair**
   - [ ] **tuple**
 
-## 2.2 向量 [vector](https://zh.cppreference.com/w/cpp/container/vector)
+## 2.2 向量 vector
 
 **`#include <vector>`**
 
