@@ -1,7 +1,3 @@
 # notes-backup
-## 笔记备份处 更多请访问[Blog](https://www.gwy.fun/)
 
-（pr1sync）
-
-(同时作为git功能试验仓库)
-(PR test2025)
+This work is licensed under a [Creative Commons Attribution-ShareAlike 4.0 International License](https://creativecommons.org/licenses/by-sa/4.0/).
