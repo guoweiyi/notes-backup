@@ -110,7 +110,7 @@ for (auto ele : stk)
 | ---------------------- | ----------------- | ---------------------- |
 | 构造                   | `queue<类型> que` | `queue<int> que;`      |
 | 进队                   | `.push(元素)`     | `que.push(1);`         |
-| 出队                   | `.pop()`          | `que.pop();`           |
+| 出队（出的是队首       | `.pop()`          | `que.pop();`           |
 | 取队首                 | `.front()`        | `int a = que.front();` |
 | 取队尾                 | `.back()`         | `int a = que.back();`  |
 | 查看大小 / 清空 / 判空 | 同                | 同                     |
@@ -695,3 +695,103 @@ int lcm(int a, int b)
 }
 ```
 
+# 伍·题目练习
+
+* 字符相关补充 
+  * cin.getline(buf, n, '@');  遇到‘@’或者读满 n-1 结束
+  * getchar(); 去换行
+  * getline(cin, s, '@')遇到‘@’停止
+
+## 5.1vector
+
+### 洛谷 [P1047](https://www.luogu.com.cn/problem/P1047)
+
+用  bool 向量记录每个位置的状态 
+
+```cpp
+vector<bool> arr(l + 1,false);
+for(int a = 0;a < m;a++){
+    int i,j;
+    cin >> i >> j;
+    for(int b = i;b <= j;b++) arr[b] = true;
+}
+```
+
+## 5.2stack/queue
+
+### 洛谷 [P1739](https://www.luogu.com.cn/problem/P1739)表达式括号匹配
+
+检查()左右括号匹配
+
+遇到左括号就入一次栈 右括号就抵消一次 最后判空
+
+```cpp
+stack<bool> st;
+for (char ch : s){
+    if(ch == '(') st.push(true);
+    else if(ch == ')'){
+        if(st.empty()){
+            cout << "NO";
+            return 0;
+        }
+        st.pop();//抵消一次
+    }
+}
+if(st.empty()) cout << "YES";
+else cout << "NO";
+```
+
+### 洛谷 [P1449](https://www.luogu.com.cn/problem/P1449)后缀表达式
+
+```cpp
+stack<int> arr;//栈
+string s;
+int num = 0;//临时 用来存数
+getline(cin, s, '@');
+for( char ch : s){
+    if(ch == '.'){//将数压入栈
+        arr.push(num);
+        num = 0;
+    }
+    else if(ch == '+'){
+        int a = arr.top(); arr.pop();
+        int b = arr.top(); arr.pop();
+        arr.push(a+b);
+    }
+    else if(ch == '-'){
+        int a = arr.top(); arr.pop();
+        int b = arr.top(); arr.pop();
+        arr.push(b-a);
+    }
+    else if(ch == '*'){
+        int a = arr.top(); arr.pop();
+        int b = arr.top(); arr.pop();
+        arr.push(a*b);
+    }
+    else if(ch == '/'){
+        int a = arr.top(); arr.pop();
+        int b = arr.top(); arr.pop();
+        arr.push(b/a);
+    }
+    else num = num * 10 + (ch - '0');//叠数字
+}
+cout << arr.top();//栈顶即是答案
+```
+
+### 洛谷 [P1996](https://www.luogu.com.cn/problem/P1996)约瑟夫问题
+
+一个圆圈点到人出局 使用队列解决问题 每次安排 m-1 个人出列到队尾 第 m 个人报数出列
+
+```cpp
+for(int i = 1;i <= n;i++) arr.push(i);
+while(!arr.empty()){
+    for(int i = 1;i < m;i++){
+        int x = arr.front();
+        arr.pop();
+        arr.push(x);
+    }
+    cout << arr.front();
+    arr.pop();
+    if(!arr.empty()) cout << " ";
+}
+```
