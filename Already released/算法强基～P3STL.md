@@ -1,6 +1,6 @@
 # 壹·引用与致谢
 
-本文由https://io.zouht.com/154.html 补充与精简而来 遵守[CC-BY-SA-4.0 license](https://github.com/guoweiyi/notes-backup?tab=readme-ov-file#)原则
+本文由https://io.zouht.com/154.html 补充与精简而来 遵守[CC-BY-SA-4.0 license](https://github.com/guoweiyi/notes-backup?tab=readme-ov-file#)
 
 同时对作者@[ChrisKim](https://space.bilibili.com/23986264)表示感谢 您的视频教程非常详细与易懂
 
@@ -141,7 +141,7 @@ priority_queue<int, vector<int>, greater<int>> pque2; // 储存int的小顶堆
 | 取堆顶          | `.top()`      | `int a = que.top();` |
 | 查看大小 / 判空 | 略            | 略                   |
 
-进出队复杂度 $O(\log n)$，取堆顶 $O(1)$.
+**进出队复杂度 $O(\log n)$**，取堆顶 $O(1)$.
 
 ### 适用情形
 
@@ -702,7 +702,7 @@ int lcm(int a, int b)
   * getchar(); 去换行
   * getline(cin, s, '@')遇到‘@’停止
 
-## 5.1vector
+## 5.1 Vector
 
 ### 洛谷 [P1047](https://www.luogu.com.cn/problem/P1047)
 
@@ -717,7 +717,7 @@ for(int a = 0;a < m;a++){
 }
 ```
 
-## 5.2stack/queue
+## 5.2 Stack/Queue
 
 ### 洛谷 [P1739](https://www.luogu.com.cn/problem/P1739)表达式括号匹配
 
@@ -778,7 +778,7 @@ for( char ch : s){
 cout << arr.top();//栈顶即是答案
 ```
 
-### 洛谷 [P1996](https://www.luogu.com.cn/problem/P1996)约瑟夫问题
+### 洛谷 [P1996](https://www.luogu.com.cn/problem/P1996) 约瑟夫问题
 
 一个圆圈点到人出局 使用队列解决问题 每次安排 m-1 个人出列到队尾 第 m 个人报数出列
 
@@ -795,3 +795,175 @@ while(!arr.empty()){
     if(!arr.empty()) cout << " ";
 }
 ```
+
+## 5.3 Priority_queue
+
+### 洛谷 [P1090](https://www.luogu.com.cn/problem/P1090) 合并果子
+
+贪心（建哈弗曼树），就是每一次选取最小的两堆果子进行合并
+
+```cpp
+priority_queue<int, vector<int> ,greater<int>> arr;
+int n,ans = 0;
+cin >> n;
+for(int i = 1;i <= n;i++){
+    int tmp;
+    cin >> tmp;
+    arr.push(tmp);
+}
+while(arr.size() > 1){
+    int x = arr.top(); arr.pop();
+    int y = arr.top(); arr.pop();
+    int z = x + y;
+    arr.push(z);
+    ans += z;
+}
+cout << ans;
+```
+
+可以知道用 priority_queue 逐个 push n 个数，每次 push 是 O(log n)，合计 O(n log n)。
+
+循环执行 n−1 次，每次包含 2 次 pop 和 1 次 push，堆操作都是 O(log n)，因此总计 O((n−1) log n) ≈ O(n log n)。
+
+### 洛谷 [P6033](https://www.luogu.com.cn/problem/P6033) 合并果子 加强数据版
+
+将所有变量开long long可以通过Subtask #3 $n = 10^5$
+
+但对于$n = 10^7$ 目前插入的效率太低了 只能重新优化算法 我们需要双队列
+
+- `q1`：存放**初始排序好的果子堆大小**
+- `q2`：存放**新合并出来的堆**（也是递增的，因为每次插入的都是比取出来的更大的）
+
+每次合并要做的事情：
+
+1. 从这两个队列的队首中，**取出两个最小的数**（分别是 `x` 和 `y`）分两次取 第一小 第二小
+2. 把 `x+y` 加到总代价 `ans` 里 把 `x+y` 再放回 `q2`（保持有序）
+
+但仍要在push的时候优化速度 使用**桶排序**
+
+（本题洛谷卡输入速度 上快读）
+
+**经验积累（ $ 5 * 10^5 $ 以上 上同步流 $ 2 * 10^6 $ 以上的考虑输入速度）**
+
+```cpp
+queue<long long> q1, q2;
+long long ans = 0;
+const int N = 100001;
+vector<int> cnt(N, 0);
+int maxA = 0;
+
+#define rd read()
+inline long long read()
+{
+    long long x = 0, y = 1;
+    char c = getchar();
+    while (c > '9' || c < '0')
+    {
+        if (c == '-')
+            y = -1;
+        c = getchar();
+    }
+    while (c >= '0' && c <= '9')
+        x = x * 10 + c - '0', c = getchar();
+    return x * y;
+}
+
+long long getMin() {
+	long long x;
+    if (q1.empty()) {
+        long long x = q2.front(); q2.pop();
+        return x;
+    }
+    if (q2.empty()) {
+        long long x = q1.front(); q1.pop();
+        return x;
+    }
+    if (q1.front() < q2.front()) {
+        long long x = q1.front(); q1.pop();
+        return x;
+    } else {
+        long long x = q2.front(); q2.pop();
+        return x;
+    }
+    return x;
+}
+
+int main() {
+    long long n = rd;
+    //桶排序
+    for (int i = 0; i < n; i++) {
+        int x = rd;
+        cnt[x]++;
+        if (x > maxA) maxA = x;  
+    }
+    for (int v = 1; v <= maxA; v++) while (cnt[v]--) q1.push(v);
+
+    for (int i = 1; i < n; i++) {
+        long long x = getMin();
+        long long y = getMin();
+        ans += x + y;
+        q2.push(x + y);
+    }
+    cout << ans << "\n";
+    return 0;
+}
+```
+
+### 洛谷 [P1168](https://www.luogu.com.cn/problem/P1168) 中位数
+
+每次排序整个数组复杂度高，对于 `N=100000` 会超时（O(N² log N)）。
+
+对于大数据，使用 **优先队列** 维护中位数，左右两个堆：左边大根堆、右边小根堆，每次插入新元素调整堆大小，中位数直接取左堆顶。
+
+```cpp
+priority_queue<int> lefta; // 大根堆
+priority_queue<int, vector<int>, greater<int>> righta; // 小根堆
+int N;
+cin >> N;
+
+for(int i = 0; i < N; i++) {
+    int x;
+    cin >> x;
+
+    if(lefta.empty() || x <= lefta.top()) lefta.push(x);
+    else righta.push(x);
+
+    // 保持 lefta 堆大小 >= righta 堆大小，且 lefta 堆最多比 righta 多 1 个
+    if(lefta.size() < righta.size()) {
+        lefta.push(righta.top());
+        righta.pop();
+    } else if(lefta.size() > righta.size() + 1) {
+        righta.push(lefta.top());
+        lefta.pop();
+    }
+
+    if(i % 2 == 0) { 
+        cout << lefta.top() << endl;
+    }
+}
+```
+
+## 5.4 Set / Multiset
+
+P2085 最小函数值
+
+P1160 队列安排
+
+P3871 [TJOI2010] 中位数
+
+## 5.5 map / unordered_map
+
+P1309 瑞士轮
+
+P5318 查找文献
+
+P1830 轰炸
+
+## 5.6 **String**
+
+P1308 统计单词数
+
+P1914 小书童——密码
+
+P3375 【模板】KMP算法
+
