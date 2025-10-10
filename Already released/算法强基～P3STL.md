@@ -130,8 +130,8 @@ for (auto ele : stk)
 **`priority_queue<类型, 容器, 比较器> pque`**
 
 ```cpp
-priority_queue<int> pque1;                            // 储存int的大顶堆
-priority_queue<int, vector<int>, greater<int>> pque2; // 储存int的小顶堆
+priority_queue<int> pque1;//堆顶 1 3 4 4 最大的在堆顶  储存int的大顶堆
+priority_queue<int, vector<int>, greater<int>> pque2; // 最小的在堆顶 储存int的小顶堆
 ```
 
 | 作用            | 用法          | 示例                 |
@@ -911,13 +911,21 @@ int main() {
 
 ### 洛谷 [P1168](https://www.luogu.com.cn/problem/P1168) 中位数
 
+* 维持动态中位数
+
 每次排序整个数组复杂度高，对于 `N=100000` 会超时（O(N² log N)）。
 
-对于大数据，使用 **优先队列** 维护中位数，左右两个堆：左边大根堆、右边小根堆，每次插入新元素调整堆大小，中位数直接取左堆顶。
+对于大数据，使用 **优先队列** 维护中位数，左右两个堆
+
+- **lefta（大根堆）**：存储较小的一半数据，堆顶是这一半的最大值
+- **righta（小根堆）**：存储较大的一半数据，堆顶是这一半的最小值
+- 因为 lefta 始终不少于 righta，所以 **lefta.top() 就是中位数**
+- 对于奇数个元素：lefta.top() 是真正的中位数
+- 对于偶数个元素：lefta.top() 是较小的那个中位数
 
 ```cpp
-priority_queue<int> lefta; // 大根堆
-priority_queue<int, vector<int>, greater<int>> righta; // 小根堆
+priority_queue<int> lefta; // 大顶堆
+priority_queue<int, vector<int>, greater<int>> righta; // 小顶堆
 int N;
 cin >> N;
 
@@ -943,13 +951,51 @@ for(int i = 0; i < N; i++) {
 }
 ```
 
+### 洛谷 [P3871](https://www.luogu.com.cn/problem/P3871) [TJOI2010] 中位数
+
+原理与上方相同 但增加了实时添加 实时调取这些特性
+
+```cpp
+priority_queue<int> lefta; //大顶堆
+priority_queue<int ,vector<int>,greater<int>> righta; //小顶堆bug1
+
+void insert(int x){
+    if(lefta.empty() || x <= lefta.top())  lefta.push(x); //bug2
+    else righta.push(x);
+
+    if(righta.size() > lefta.size()){
+        lefta.push(righta.top());
+        righta.pop();
+    }
+    else if(righta.size() + 1 < lefta.size()){//bug3
+        righta.push(lefta.top());
+        lefta.pop();
+    }
+}
+int main(){
+    cin >> N;
+    for(int i = 0;i < N;i++){
+        int x; cin >> x;
+        insert(x);
+    }
+    cin >> M;
+    while(M--){
+        cin >> s;
+        if(s == "add"){
+            int x; cin >> x;
+            insert(x);
+        }
+        else cout << lefta.top() << endl;
+    }
+    return 0;
+}
+```
+
 ## 5.4 Set / Multiset
 
-P2085 最小函数值
+### 洛谷 [P2085](https://www.luogu.com.cn/problem/P2085) 最小函数值
 
-P1160 队列安排
-
-P3871 [TJOI2010] 中位数
+### 洛谷 [P1160](https://www.luogu.com.cn/problem/P1160) 队列安排
 
 ## 5.5 map / unordered_map
 
