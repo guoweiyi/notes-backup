@@ -132,6 +132,16 @@ for (auto ele : stk)
 ```cpp
 priority_queue<int> pque1;//堆顶 1 3 4 4 最大的在堆顶  储存int的大顶堆
 priority_queue<int, vector<int>, greater<int>> pque2; // 最小的在堆顶 储存int的小顶堆
+
+//二维写法
+priority_queue<pair<int,int>, vector<pair<int,int>>, cmp> arr;
+
+//比较器
+struct cmp {
+    bool operator()(const pair<int,int> &a, const pair<int,int> &b) const {
+        return a.second < b.second;
+    }
+};
 ```
 
 | 作用            | 用法          | 示例                 |
@@ -695,7 +705,7 @@ int lcm(int a, int b)
 }
 ```
 
-# 伍·题目练习
+# STL题目练习
 
 * 字符相关补充 
   * cin.getline(buf, n, '@');  遇到‘@’或者读满 n-1 结束
